@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<link rel="shortcut icon" href="../favicon.ico">
+			<meta name="viewport" content="width=device-width, initial-scale=1">
+			<!--	<link rel="stylesheet"
+					href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css"> -->
+					<meta name="generator" content="Bootply" />
+					<link href="../css/bootstrap.min.css" rel="stylesheet">
+						<link href="../css/andry_styles.css" rel="stylesheet">
+                        <link href="../css/styles.css" rel="stylesheet">
+							<script src="../js/jquery.min.js"></script>
+							<script src="../js/bootstrap.min.js"></script>
+  <?php 
+  session_start();
+  $_SERVER['DOCUMENT_ROOT']="/var/www/html/assignments/phpHelpDesk";
+  $_SESSION['directory_name'] = $_SERVER['DOCUMENT_ROOT'].'/';
+  require_once($_SESSION['directory_name'].'/Connections/helpdeskphp.php');
+  require ($_SESSION['directory_name'].'/configs/config.inc.php');
+  require ($_SESSION['directory_name'].'/Libs/common.lib.php');
+  require($_SESSION['directory_name'].'/configs/localization.php');
+
+  connectDB();
+  error();
+
+  //$what=$_POST["what"];
+  $what=Sanitized($_POST["what"]);
+  $what=SanitizedXSS($_POST["what"]);
+  ?>
+
+							<title>
+								Help Desk - Get answers to your questions - v. <?php echo $VERSION; ?>
+							</title>
+							<meta name="keywords" content="" />
+							<meta name="description" content="" />
+	</head>
+	<body>
+
+		<!-- header -->
+		<div id="top-nav" class="navbar navbar-inverse navbar-static-top">
+			<div class="container-fluid">
+
+				<div class="navbar-header">
+
+					<a class="navbar-brand" href="https://www.cs.ucy.ac.cy/">
+						<img src="../pictures/CSUCYLogo.png" alt="UCY Logo" width="350"
+							height="77">
+
+
+				</div>
+
+			</div>
+			<div class="navbar-header">
+
+				<a class="navbar-brand" href="https://www.cs.ucy.ac.cy/">
+
+				</a>
+
+			</div>
+			<p align="center" style="margin-left:37px">
+				<a href="../index.php" style="text-decoration:none;">
+					<font face="Times New Roman" font size="6" color="white">
+						<b>
+							Helpdesk v.<?php echo $VERSION;?>
+						</b>
+				</a>
+			</p>
+
+		</div>
+
+		<nav class="navbar navbar-default">
+			<div class="container-fluid">
+
+				<!-- Brand and toggle get grouped for better mobile display -->
+				<div class="navbar-header">
+					<button type="button" class="navbar-toggle collapsed"
+						data-toggle="collapse" data-target="#bs-example-navbar-collapse-1"
+						aria-expanded="false">
+						<span class="sr-only"></span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+					</button>
+					<a class="navbar-brand" href="../index.php"><?php echo _("Home"); ?>
+					</a>
+				</div>
+
+				<!-- Collect the nav links, forms, and other content for toggling -->
+				<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+					<font size="2" color="White">
+						<ul class="nav navbar-nav">
+
+							<li>
+								<a href="../announcements/announcements.php"><?php echo _("Announcements"); ?>
+								</a>
+							</li>
+							<li class="dropdown">
+								<a href="http://its.cs.ucy.ac.cy/guides" class="dropdown-toggle"
+									data-toggle="dropdown" role="button" aria-haspopup="true"
+									aria-expanded="false" target="Help"><?php echo _("User Guides"); ?>
+									<span class="caret"></span>
+								</a>
+								<ul class="dropdown-menu">
+									<li>
+										<a
+											href="http://its.cs.ucy.ac.cy/images/stories/uploads/guides/newuserguide.pdf"
+											target="Help"><?php echo _("New user guide"); ?>
+										</a>
+									</li>
+									<li role="separator" class="divider"></li>
+									<li>
+										<a
+											href="http://its.cs.ucy.ac.cy/images/stories/uploads/guides/linux_and_freenx.pdf"
+											target="Help"><?php echo _("Unix Labs & FreeNX"); ?>
+										</a>
+									</li>
+									<li role="separator" class="divider"></li>
+									<li>
+										<a
+											href="http://its.cs.ucy.ac.cy/images/stories/uploads/guides/vpn.pdf"
+											target="Help"><?php echo _("VPN"); ?>
+										</a>
+									</li>
+									<li role="separator" class="divider"></li>
+									<li>
+										<a
+											href="http://its.cs.ucy.ac.cy/images/stories/uploads/guides/email.pdf"
+											target="Help"><?php echo _("Email"); ?>
+										</a>
+									</li>
+									<li role="separator" class="divider"></li>
+									<li>
+										<a
+											href="http://its.cs.ucy.ac.cy/images/stories/uploads/guides/www.pdf"
+											target="Help"><?php echo _("Web services"); ?>
+										</a>
+									</li>
+								</ul>
+							</li>
+							<li>
+								<a href="../aliases.php"><?php echo _("Email Aliases"); ?>
+								</a>
+							</li>
+							<li>
+								<a href="http://its.cs.ucy.ac.cy/" target="Help"><?php echo _("ITS WebSite"); ?>
+								</a>
+							</li>
+							<li>
+								<a href="http://its.cs.ucy.ac.cy/faqs" target="Help"><?php echo _("FAQs"); ?>
+								</a>
+							</li>
+							<li>
+								<a href="http://its.cs.ucy.ac.cy/contact/about" target="Help"><?php echo _("Contact Us"); ?>
+								</a>
+							</li>
+
+						</ul>
+
+						<ul class="nav navbar-nav navbar-right">
+
+							<li class="dropdown">
+								<a class="dropdown-toggle" data-toggle="dropdown" role="button"
+									aria-haspopup="true" aria-expanded="false">
+									<i class="glyphicon glyphicon-globe"></i>
+								</a>
+								<ul class="dropdown-menu">
+		  <?php$which=$_GET["which"]; ?>
+									<li>
+										<a href="?which=<?php echo $which; ?>&locale=en_US">EN</a>
+									</li>
+									<li role="separator" class="divider"></li>
+									<li>
+										<a href="?which=<?php echo $which; ?>&locale=el_GR">EL</a>
+									</li>
+								</ul>
+							</li>
+
+
+							<li>
+ 
+   <?php  if ($_SESSION['valid_user'])
+  {?>
+								<a href="../logout.php">
+									<i class="glyphicon glyphicon-lock"></i><?php echo _("Log Out"); ?>
+								</a><?php }  else { ?>
+								<a href="../login.php" class="sidebarlt">
+									<i class="glyphicon glyphicon-lock"></i><?php echo _("Login"); ?>
+								</a>
+
+  <?php }
+
+  ?>
+							</li>
+						</ul>
+				</div><!-- /.navbar-collapse -->
+			</div><!-- /.container-fluid -->
+		</nav>
+
+		<!-- Main -->
+		<div class="container-fluid">
+			<div class="row">
+				<div class="col-md-2">
+					<!-- Left column -->
+					<P>
+						<font size="2" color="Black"><?php echo _("Menu:"); ?>
+					</P>
+
+					<hr>
+
+						<ul class="nav nav-stacked">
+
+
+							<ul class="nav nav-stacked collapse in" id="userMenu">
+								<li class="active">
+									<a href="../problem_out.php">
+										<i class="glyphicon glyphicon-chevron-right"></i><?php echo _("Enter Request"); ?>
+									</a>
+								</li>
+								<li class="active">
+									<a href="../solved_pending.php">
+										<i class="glyphicon glyphicon-chevron-right"></i><?php echo _("Requests & Answers"); ?>
+									</a>
+								</li>
+								<li class="active">
+									<a href="../onlysolved.php">
+										<i class="glyphicon glyphicon-chevron-right"></i> <?php echo _("Solved Problems"); ?>
+									</a>
+								</li>
+								<li class="active">
+									<a href="../Key.php">
+										<i class="glyphicon glyphicon-chevron-right"></i> <?php echo _("Search"); ?>
+										<script language="JavaScript" type="text/javascript"><!-- function form1_Validator(theForm) 
+												{ if (theForm.what.value.length <2) { alert("Please enter a value for the 
+												\"search term\" field. At least 2 chars."); theForm.what.focus(); return 
+												(false); } return (true); } // -->
+										</script>
+										<script language="JavaScript" type="text/javascript"><!-- function form1_Validator(theForm) 
+												{ if (theForm.what.value.length <2) { alert("Please enter a value for the 
+												\"search term\" field. At least 2 chars."); theForm.what.focus(); return 
+												(false); } return (true); } // -->
+										</script>
+									</a>
+								</li>
+								<li>
+									<script language="JavaScript" type="text/javascript"><!-- function form1_Validator(theForm) 
+											{ if (theForm.what.value.length <2) { alert("Please enter a value for the 
+											\"search term\" field. At least 2 chars."); theForm.what.focus(); return 
+											(false); } return (true); } </script> </ul> </ul> <form action="../Search.php" 
+											method="post" name="FrontPage_Fom3" id="FrontPage_Fom3" 
+											onsubmit="return form1_Validator(this)"> <label><?php echo _("Quick Search:"); 
+											?></label> <input name="what" type="text" class="form-control" id="what" 
+											value="" size="10"> <br> <button type="submit" name="Submit" class="btn btn-default" 
+											value="" ><span class="glyphicon glyphicon-search"></button> </form> <?php 
+											if ($_SESSION['valid_tech']) {?> <hr> <p><strong> <?php echo _("Administration 
+											Menu:"); ?></strong></p> <hr> <ul class="nav nav-pills nav-stacked"> <li 
+											class="nav-header"></li> <li class="active"> <a href="../admin/techtesting.php"><i 
+											class="glyphicon glyphicon-chevron-right"></i> <?php echo _("Technichian 
+											Control"); ?></a></li> <?php } ?> <?php if ($_SESSION['valid_admin']) {?> 
+											<li class="active"> <a href="../admin/admin.php"><i class="glyphicon glyphicon-chevron-right"></i> 
+											<?php echo _("Administrator Control"); ?></a></li> <li class="active"> <a 
+											href="../admin/analytics.php"><i class="glyphicon glyphicon-chevron-right"></i><?php 
+											echo _("Analytics"); ?> </a></li> <?php } ?> </ul> </div> <!-- /col-3 -->
+
+										<div class="col-md-10"><!-- TemplateBeginEditable name="EditRegion5" -->
+											<h1>&nbsp;
+											</h1>
+											<!-- TemplateEndEditable -->
+										</div>
+
+										<!--/col-span-9 -->
+				</div>
+
+			</div>
+			<!-- /Main -->
+
+			<footer class="text-center">
+				<a href="index.php">
+					<strong><?php echo _("Home"); ?>
+					</strong>
+				</a>
+				<a>
+					<strong>|</strong>
+				</a>
+				<a href="announcements/announcements.php">
+					<strong><?php echo _("Announcements"); ?>
+					</strong>
+				</a>
+				<a>
+					<strong>|</strong>
+				</a>
+				<a href="http://its.cs.ucy.ac.cy/guides">
+					<strong><?php echo _("User Guides"); ?>
+					</strong>
+				</a>
+				<a>
+					<strong>|</strong>
+				</a>
+				<a href="aliases.php">
+					<strong><?php echo _("Email Aliases"); ?>
+					</strong>
+				</a>
+				<a>
+					<strong>|</strong>
+				</a>
+				<a href="http://its.cs.ucy.ac.cy/" target="Help">
+					<strong><?php echo _("ITS WebSite"); ?>
+						<strong>
+				</a>
+				<a>
+					<strong>|</strong>
+				</a>
+				<a href="http://its.cs.ucy.ac.cy/faqs">
+					<strong><?php echo _("FAQs"); ?>
+					</strong>
+				</a>
+				<a>
+					<strong>|</strong>
+				</a>
+				<a href="http://its.cs.ucy.ac.cy/contact/about">
+					<strong><?php echo _("Contact Us"); ?>
+					</strong>
+				</a>
+				<a>
+					<strong>|</strong>
+				</a>
+				<a href="about.php">
+					<strong><?php echo _("About"); ?>
+					</strong>
+				</a>
+				<a>
+					<strong>|</strong>
+				</a>
+				<a>
+					<strong>
+						<br />
+						This site is copyright
+						<i class="glyphicon glyphicon-copyright-mark"></i>
+						2013 The HelpDesk support Team
+					</strong>
+				</a>
+			</footer>
+	</body>
+</html>
